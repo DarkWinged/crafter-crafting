@@ -1,0 +1,209 @@
+- id: 1
+  name: iron ingot
+  ingredients:
+    - id: 1
+      amount: 2
+  products:
+    - id: 6
+      amount: 1
+- id: 2
+  name: copper ingot
+  ingredients:
+    - id: 2
+      amount: 2
+  products:
+    - id: 7
+      amount: 1
+- id: 3
+  name: steel ingot
+  ingredients:
+    - id: 1
+      amount: 2
+    - id: 3
+      amount: 1
+  products:
+    - id: 8
+      amount: 1
+  substitutions:
+    - original:
+        id: 3
+        amount: 1
+      substitute: 
+        id: 5
+        amount: 3
+- id: 4
+  name: charcoal
+  ingredients:
+    - id: 5
+      amount: 3
+  products:
+    - id: 3
+      amount: 1
+- id: 5
+  name: iron plate
+  ingredients:
+    - id: 6
+      amount: 1
+  products:
+    - id: 9
+      amount: 1
+- id: 6
+  name: copper plate
+  ingredients:
+    - id: 7
+      amount: 1
+  products:
+    - id: 10
+      amount: 1
+- id: 7
+  name: steel plate
+  ingredients:
+    - id: 8
+      amount: 1
+  products:
+    - id: 11
+      amount: 1
+- id: 8
+  name: iron gear
+  ingredients:
+    - id: 9
+      amount: 2
+  products:
+    - id: 12
+      amount: 1
+- id: 9
+  name: copper gear
+  ingredients:
+    - id: 10
+      amount: 2
+  products:
+    - id: 13
+      amount: 1
+- id: 10
+  name: steel gear
+  ingredients:
+    - id: 11
+      amount: 2
+  products:
+    - id: 14
+      amount: 1
+- id: 11
+  name: iron rod
+  ingredients:
+    - id: 9
+      amount: 1
+  products:
+    - id: 15
+      amount: 2
+- id: 12
+  name: copper rod
+  ingredients:
+    - id: 10
+      amount: 1
+  products:
+    - id: 16
+      amount: 2
+- id: 13
+  name: steel rod
+  ingredients:
+    - id: 11
+      amount: 1
+  products:
+    - id: 17
+      amount: 2
+- id: 14
+  name: iron wire
+  ingredients:
+    - id: 15
+      amount: 1
+  products:
+    - id: 18
+      amount: 1
+- id: 15
+  name: copper wire
+  ingredients:
+    - id: 16
+      amount: 1
+  products:
+    - id: 19
+      amount: 1
+- id: 16
+  name: steel wire
+  ingredients:
+    - id: 17
+      amount: 1
+  products:
+    - id: 20
+      amount: 1
+- id: 17
+  name: iron pipe
+  ingredients:
+    - id: 9
+      amount: 1
+  products:
+    - id: 21
+      amount: 1
+- id: 18
+  name: copper pipe
+  ingredients:
+    - id: 10
+      amount: 1
+  products:
+    - id: 22
+      amount: 1
+- id: 19
+  name: steel pipe
+  ingredients:
+    - id: 11
+      amount: 1
+  products:
+    - id: 23
+      amount: 1
+- id: 20
+  name: iron nail
+  ingredients:
+    - id: 6
+      amount: 1
+  products:
+    - id: 24
+      amount: 5
+- id: 21
+  name: copper nail
+  ingredients:
+    - id: 7
+      amount: 1
+  products:
+    - id: 25
+      amount: 5
+- id: 22
+  name: steel nail
+  ingredients:
+    - id: 8
+      amount: 1
+  products:
+    - id: 26
+      amount: 5
+- id: 23
+  name: iron screw
+  ingredients:
+    - id: 15
+      amount: 1
+  products:
+    - id: 27
+      amount: 5
+- id: 24
+  name: copper screw
+  ingredients:
+    - id: 16
+      amount: 1
+  products:
+    - id: 28
+      amount: 5
+- id: 25
+  name: steel screw
+  ingredients:
+    - id: 17
+      amount: 1
+  products:
+    - id: 29
+      amount: 5

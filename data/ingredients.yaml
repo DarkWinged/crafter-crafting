@@ -1,0 +1,58 @@
+- id: 1
+  name: iron ore
+- id: 2
+  name: copper ore
+- id: 3
+  name: coal
+- id: 4
+  name: stone
+- id: 5
+  name: wood
+- id: 6
+  name: iron ingot
+- id: 7
+  name: copper ingot
+- id: 8
+  name: steel ingot
+- id: 9
+  name: iron plate
+- id: 10
+  name: copper plate
+- id: 11
+  name: steel plate
+- id: 12
+  name: iron gear
+- id: 13
+  name: copper gear
+- id: 14
+  name: steel gear
+- id: 15
+  name: iron rod
+- id: 16
+  name: copper rod
+- id: 17
+  name: steel rod
+- id: 18
+  name: iron wire
+- id: 19
+  name: copper wire
+- id: 20
+  name: steel wire
+- id: 21
+  name: iron pipe
+- id: 22
+  name: copper pipe
+- id: 23
+  name: steel pipe
+- id: 24
+  name: iron nail
+- id: 25
+  name: copper nail
+- id: 26
+  name: steel nail
+- id: 27
+  name: iron screw
+- id: 28
+  name: copper screw
+- id: 29
+  name: steel screw

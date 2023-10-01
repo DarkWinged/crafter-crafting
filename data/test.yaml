@@ -1,0 +1,48 @@
+ingredients:
+- id: 1
+  name: iron ore
+- id: 2
+  name: copper ore
+- id: 3
+  name: coal
+- id: 4
+  name: stone
+- id: 5
+  name: wood
+- id: 6
+  name: iron ingot
+- id: 7
+  name: copper ingot
+- id: 8
+  name: steel ingot
+- id: 9
+  name: boby
+recipes:
+- id: 1
+  name: iron ingot
+  products:
+  - amount: 1
+    id: 6
+  recipe:
+  - amount: 2
+    id: 1
+- id: 2
+  name: copper ingot
+  products:
+  - amount: 1
+    id: 7
+  recipe:
+  - amount: 2
+    id: 2
+- id: 3
+  name: steel ingot
+  products:
+  - amount: 1
+    id: 8
+  recipe:
+  - amount: 2
+    id: 1
+  - amount: 1
+    id: 3
+- id: 4
+  name: boby
