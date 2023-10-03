@@ -13,6 +13,7 @@ class RecipesTab(Tab):
         self.tab_name = "Recipes"
         self.data_list = PList(data_list)
         self.ingredients_data = ingredients_data
+        self.selected_index = None
 
         # Create lists to hold the widgets for ingredients and products
         self.ingredient_rows: list[EntryRow] = []
@@ -27,37 +28,47 @@ class RecipesTab(Tab):
         self.id_var.trace("w", self.update_data_list)  # Attach trace to update data_list
         self.name_var.trace("w", self.update_data_list)  # Attach trace to update data_list
 
+        self.duration_var = tk.StringVar()
+        self.duration_var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.duration_label = tk.Label(self.attributes_frame, text="Duration:")
+        self.duration_label.grid(row=2, column=0)
+        self.duration_entry = tk.Entry(self.attributes_frame, textvariable=self.duration_var)
+        self.duration_entry.grid(row=2, column=1)
+
         self.ingredients_label = tk.Label(self.attributes_frame, text="Ingredients:")
-        self.ingredients_label.grid(row=2, column=0, columnspan=2, pady=(10, 0))
+        self.ingredients_label.grid(row=3, column=0, columnspan=2, pady=(10, 0))
         self.ingredients_pane = ttk.PanedWindow(self.attributes_frame, orient=tk.VERTICAL)
-        self.ingredients_pane.grid(row=3, column=0, columnspan=2, sticky="nsew", padx=10)
+        self.ingredients_pane.grid(row=4, column=0, columnspan=2, sticky="nsew", padx=10)
         self.ingredients_listbox = tk.Listbox(self.ingredients_pane, selectmode=tk.SINGLE)
         self.ingredients_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.add_ingredient_button = tk.Button(self.attributes_frame, text="Add Ingredient", command=self.add_ingredient_entry)
-        self.add_ingredient_button.grid(row=4, column=0, columnspan=2, pady=(0, 10))
+        self.add_ingredient_button.grid(row=5, column=0, columnspan=2, pady=(0, 10))
 
         self.products_label = tk.Label(self.attributes_frame, text="Products:")
-        self.products_label.grid(row=5, column=0, columnspan=2, pady=(10, 0))
+        self.products_label.grid(row=6, column=0, columnspan=2, pady=(10, 0))
         self.products_pane = ttk.PanedWindow(self.attributes_frame, orient=tk.VERTICAL)
-        self.products_pane.grid(row=6, column=0, columnspan=2, sticky="nsew", padx=10)
+        self.products_pane.grid(row=7, column=0, columnspan=2, sticky="nsew", padx=10)
         self.products_listbox = tk.Listbox(self.products_pane, selectmode=tk.SINGLE)
         self.products_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.add_product_button = tk.Button(self.attributes_frame, text="Add Product", command=self.add_product_entry)
-        self.add_product_button.grid(row=7, column=0, columnspan=2, pady=(0, 10))
+        self.add_product_button.grid(row=8, column=0, columnspan=2, pady=(0, 10))
 
         self.confirm_button.config(command=self.update_selected_entry)
         self.confirm_button.pack_forget()
-        self.confirm_button.grid(row=8, column=0, columnspan=2, pady=10)
+        self.confirm_button.grid(row=9, column=0, columnspan=2, pady=10)
 
     def load_data(self, data: list[dict[str, str or int]], ingredients_data: list[dict[str, str or int]]):
         super().load_data(data)
+        for entry in self.data_list:
+            if entry.get('duration') is None:
+                entry['duration'] = 0
         self.ingredients_data = ingredients_data
 
     def add_entry(self):
         name = simpledialog.askstring(f"Add {self.tab_name} Entry", f"Enter the {self.tab_name.lower()} name:")
         if name:
             new_id = len(self.data_list) + 1
-            new_entry = {'id': new_id, 'name': name, 'ingredients': [], 'products': []}
+            new_entry = {'id': new_id, 'name': name, 'duration':0, 'ingredients': [], 'products': []}
             self.data_list.append(new_entry)
             self.listbox.insert(tk.END, name)
             self.clear_attributes()
@@ -74,6 +85,7 @@ class RecipesTab(Tab):
             selected_entry = self.data_list[self.selected_index]
             self.id_var.set(selected_entry['id'])  # Update ID entry
             self.name_var.set(selected_entry['name'])  # Update Name entry
+            self.duration_var.set(selected_entry['duration'])  # Update Duration entry
 
             # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
             for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
@@ -86,6 +98,10 @@ class RecipesTab(Tab):
                 product_id = product.get('id')
                 product_amount = product.get('amount')
                 self.create_product_entry(product_id, product_amount, row)
+
+    def clear_attributes(self):
+        self.duration_var.set("")
+        return super().clear_attributes()
 
     def clear_ingredient_entries(self):
         self.ingredients_listbox.delete(0, tk.END)
@@ -135,7 +151,6 @@ class RecipesTab(Tab):
             product_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.product_rows.append(product_row)
 
-
     def remove_ingredient_entry(self, row):
         # Remove the ingredient widgets and references
         self.ingredient_rows[row].destroy()
@@ -181,13 +196,18 @@ class RecipesTab(Tab):
         if self.selected_index is not None:
             new_id = self.id_var.get()
             new_name = self.name_var.get()
+            new_duration = self.duration_var.get()
             if new_id.isdigit():
                 new_id = int(new_id)
             else:
                 new_id = None
+            if new_duration.isdigit():
+                new_duration = int(new_duration)
+            else:
+                new_duration = 0
             if new_id is not None and new_name is not None:
                 # Update the selected entry's data in data_list
-                entry = {'id': new_id, 'name': new_name, 'ingredients': [], 'products': []}
+                entry = {'id': new_id, 'name': new_name, 'duration': new_duration, 'ingredients': [], 'products': []}
 
                 for ingredient_row in self.ingredient_rows:
                     ingredient_dropdown = ingredient_row.dropdown_var
