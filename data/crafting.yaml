@@ -17,26 +17,32 @@ ingredients:
   name: steel ingot
 - id: 9
   name: iron plate
+- id: 10
+  name: copper wire
 recipes:
-- id: 1
+- duration: 2
+  id: 1
   ingredients: []
   name: mine iron ore
   products:
   - amount: 1
     id: 1
-- id: 2
+- duration: 1
+  id: 2
   ingredients: []
   name: mine copper ore
   products:
   - amount: 1
     id: 2
-- id: 3
+- duration: 0
+  id: 3
   ingredients: []
   name: mine coal
   products:
   - amount: 1
     id: 3
-- id: 4
+- duration: 0
+  id: 4
   ingredients:
   - amount: 2
     id: 1
@@ -44,7 +50,8 @@ recipes:
   products:
   - amount: 1
     id: 6
-- id: 5
+- duration: 0
+  id: 5
   ingredients:
   - amount: 2
     id: 2
@@ -52,7 +59,8 @@ recipes:
   products:
   - amount: 1
     id: 7
-- id: 6
+- duration: 0
+  id: 6
   ingredients:
   - amount: 2
     id: 1
@@ -62,7 +70,8 @@ recipes:
   products:
   - amount: 1
     id: 8
-- id: 7
+- duration: 0
+  id: 7
   ingredients:
   - amount: 1
     id: 6
@@ -70,3 +79,12 @@ recipes:
   products:
   - amount: 1
     id: 9
+- duration: 0
+  id: 8
+  ingredients:
+  - amount: 1
+    id: 7
+  name: spin copper wire
+  products:
+  - amount: 1
+    id: 10

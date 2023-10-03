@@ -8,7 +8,7 @@ protected_list[1] = 5
 protected_list.append(4)
 protected_list.extend([6, 7])
 
-# Original list is still unchanged
+# Original list is still uncurrent
 print("\nBefore update:")
 print("original_list", original_list)  # Output: [1, 2, 3]
 print("protected_list", protected_list)  # Output: [1, 5, 3, 4, 6, 7]
@@ -38,3 +38,24 @@ protected_list.reset()
 print("\nAfter reset:")
 print("protected_list", protected_list) # Output: [1, 5, 3, 4, 6, 7]
 print("original_list", original_list) # Output: [1, 5, 3, 4, 6, 7]
+
+protected_list.current = [11, 12, 13]
+
+print("\nBefore update:")
+print("original_list", original_list)  # Output: [1, 5, 3, 4, 6, 7]
+print("protected_list", protected_list)  # Output: [11, 12, 13]
+protected_list.update()
+print("\nAfter update:")
+print("original_list", original_list)  # Output: [11, 12, 13]
+print("protected_list", protected_list)  # Output: [11, 12, 13]
+
+
+protected_list.current = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+
+print("\nBefore update:")
+print("original_list", original_list)  # Output: [11, 12, 13]
+print("protected_list", protected_list)  # Output: [9, 8, 7, 6, 5, 4, 3, 2, 1]
+protected_list.update()
+print("\nAfter update:")
+print("original_list", original_list)  # Output: [9, 8, 7, 6, 5, 4, 3, 2, 1]
+print("protected_list", protected_list)  # Output: [9, 8, 7, 6, 5, 4, 3, 2, 1]
