@@ -1,3 +1,4 @@
+import platform
 import tkinter as tk
 import tkinter.filedialog as filedialog
 from os import path
@@ -51,9 +52,17 @@ class MainApplication:
         file_menu.add_command(label="Save As", command=self.save_data_as)
 
         self.parent_widget.after(5000, self.detect_warnings)
-        self.parent_widget.bind("<<Error>>", self.display_error)   
+        self.parent_widget.bind("<<Error>>", self.display_error)
+        if platform.system().lower() == "darwin":
+            ctl = "Command"
+        else:
+            ctl = "Ctrl"
+        self.parent_widget.bind(f"<{ctl}-o>", self.load_data)
+        self.parent_widget.bind(f"<{ctl}-s>", self.save_data)
+        self.parent_widget.bind(f"<{ctl}-n>", self.new)
+        self.parent_widget.bind(f"<{ctl}-Shift-S>", self.save_data_as)
 
-    def load_data(self):
+    def load_data(self, event=None):
         file_path = filedialog.askopenfilename(title="Select a file",
                                                filetypes=(("YAML files", "*.yaml"), ("JSON files", "*.json"),
                                                           ("All files", "*.*")))
@@ -66,9 +75,12 @@ class MainApplication:
             except FileNotFoundError:
                 self.display_error("File not found")
 
-    def save_data(self):
+    def save_data(self, event=None):
+        print(self.file_path)
         if self.file_path:
             try:
+                self.data_model.ingredients = self.ingredients_tab.data_list.original
+                self.data_model.recipes = self.recipes_tab.data_list.original
                 self.data_model.save_data(self.file_path)
                 self.show_info("Data saved successfully")
             except FileNotFoundError:
@@ -76,7 +88,7 @@ class MainApplication:
         else:
             self.save_data_as()
 
-    def save_data_as(self):
+    def save_data_as(self, event=None):
         file_name = path.basename(self.file_path) if self.file_path else "untitled"
         file_path = filedialog.asksaveasfilename(title="Save As",
                                                  initialfile=file_name,
@@ -84,15 +96,15 @@ class MainApplication:
                                                             ("All files", "*.*")))
         if file_path:
             try:
-                self.data_model.ingredients = self.ingredients_tab.data_list
-                self.data_model.recipes = self.recipes_tab.data_list
+                self.data_model.ingredients = self.ingredients_tab.data_list.original
+                self.data_model.recipes = self.recipes_tab.data_list.original
                 self.data_model.save_data(file_path)
                 self.file_path = file_path
                 self.show_info("Data saved successfully")
             except FileNotFoundError:
                 self.display_error("File not found")
 
-    def new(self):
+    def new(self, event=None):
         self.data_model = DataModel()
         self.ingredients_tab.load_data(self.data_model.ingredients)
         self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
