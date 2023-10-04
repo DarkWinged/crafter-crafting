@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox
-from app.protected_list import PList  # Import the PList class from your module
+from app.protected_list import PList
+from app.value_box import ValueBox  # Import the PList class from your module
 
 class Tab:
     def __init__(self, parent_frame: tk.Frame, tab_name, data_list):
@@ -33,21 +34,9 @@ class Tab:
         self.attributes_frame = tk.Frame(self.parent_frame)
         self.attributes_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        self.id_label = tk.Label(self.attributes_frame, text="ID:")
-        self.id_label.grid(row=0, column=0)
+        self.id_value_box = ValueBox(self.attributes_frame, "ID", self.update_data_list, 0, 0, 'int')
 
-        self.id_var = tk.StringVar()  # Create StringVar for ID
-        self.id_entry = tk.Entry(self.attributes_frame, textvariable=self.id_var)
-        self.id_entry.grid(row=0, column=1)
-        self.id_var.trace("w", self.update_data_list)  # Attach trace to update data_list
-
-        self.name_label = tk.Label(self.attributes_frame, text="Name:")
-        self.name_label.grid(row=1, column=0)
-
-        self.name_var = tk.StringVar()  # Create StringVar for Name
-        self.name_entry = tk.Entry(self.attributes_frame, textvariable=self.name_var)
-        self.name_entry.grid(row=1, column=1)
-        self.name_var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.name_value_box = ValueBox(self.attributes_frame, "Name", self.update_data_list, 1, 0)
 
         self.confirm_button = tk.Button(self.attributes_frame, text="Confirm", command=self.update_selected_entry)
         self.confirm_button.grid(row=2, column=0, columnspan=2, pady=10)
@@ -80,13 +69,13 @@ class Tab:
         if selected_index:
             self.selected_index = selected_index[0]
             selected_entry = self.data_list[self.selected_index]
-            self.id_var.set(selected_entry['id'])  # Update ID entry
-            self.name_var.set(selected_entry['name'])  # Update Name entry
+            self.id_value_box.set(selected_entry['id'])  # Update ID entry
+            self.name_value_box.set(selected_entry['name'])  # Update Name entry
 
     def clear_attributes(self):
         self.selected_index = None  # Set selected_index to None
-        self.id_var.set("")  # Clear ID entry
-        self.name_var.set("")  # Clear Name entry
+        self.id_value_box.set("")  # Clear ID entry
+        self.name_value_box.set("")  # Clear Name entry
         self.data_list.update()  # Call the data_list's update method
 
     def update_selected_entry(self):
@@ -94,12 +83,8 @@ class Tab:
 
     def update_data_list(self, *args):
         if self.selected_index is not None:
-            new_id = self.id_var.get()
-            new_name = self.name_var.get()
-            if new_id.isdigit():
-                new_id = int(new_id)
-            else:
-                new_id = None
+            new_id = self.id_value_box.get()
+            new_name = self.name_value_box.get()
             if new_id is not None and new_name is not None:
                 entry = {'id': new_id, 'name': new_name}
                 self.data_list[self.selected_index] = entry

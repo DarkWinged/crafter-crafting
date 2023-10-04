@@ -19,7 +19,7 @@ class MainApplication:
         self.tabs.pack(fill=tk.BOTH, expand=True)
 
         self.ingredients_frame = tk.Frame(self.tabs)
-        self.recipes_frame = tk.Frame(self.tabs)
+        #self.recipes_frame = tk.Frame(self.tabs)
 
         self.warning_label = tk.Label(self.parent_widget, text="", fg="yellow", anchor="w")
         self.warning_label.pack(fill="x")
@@ -31,10 +31,10 @@ class MainApplication:
         self.info_label.pack(fill='x')
 
         self.tabs.add(self.ingredients_frame, text="Ingredients")
-        self.tabs.add(self.recipes_frame, text="Recipes")
+        #self.tabs.add(self.recipes_frame, text="Recipes")
 
         self.ingredients_tab = IngredientsTab(self.ingredients_frame, self.data_model.ingredients)
-        self.recipes_tab = RecipesTab(self.recipes_frame, self.data_model.recipes, self.ingredients_tab.data_list)
+        #self.recipes_tab = RecipesTab(self.recipes_frame, self.data_model.recipes, self.ingredients_tab.data_list)
 
         self.file_path = None
 
@@ -70,7 +70,7 @@ class MainApplication:
             try:
                 self.data_model.load_data(file_path)
                 self.ingredients_tab.load_data(self.data_model.ingredients)
-                self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
+                #self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
                 self.file_path = file_path
             except FileNotFoundError:
                 self.display_error("File not found")
@@ -80,7 +80,7 @@ class MainApplication:
         if self.file_path:
             try:
                 self.data_model.ingredients = self.ingredients_tab.data_list.original
-                self.data_model.recipes = self.recipes_tab.data_list.original
+                #self.data_model.recipes = self.recipes_tab.data_list.original
                 self.data_model.save_data(self.file_path)
                 self.show_info("Data saved successfully")
             except FileNotFoundError:
@@ -97,7 +97,7 @@ class MainApplication:
         if file_path:
             try:
                 self.data_model.ingredients = self.ingredients_tab.data_list.original
-                self.data_model.recipes = self.recipes_tab.data_list.original
+                #self.data_model.recipes = self.recipes_tab.data_list.original
                 self.data_model.save_data(file_path)
                 self.file_path = file_path
                 self.show_info("Data saved successfully")
@@ -107,13 +107,13 @@ class MainApplication:
     def new(self, event=None):
         self.data_model = DataModel()
         self.ingredients_tab.load_data(self.data_model.ingredients)
-        self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
+        #self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
         self.file_path = None
 
     def detect_warnings(self):
         warnings = []
         warnings.extend(self.detect_overlapping_ids(self.ingredients_tab.data_list))
-        warnings.extend(self.detect_overlapping_ids(self.recipes_tab.data_list))
+        #warnings.extend(self.detect_overlapping_ids(self.recipes_tab.data_list))
         self.warning_label.config(text='\n'.join([f'Warning! {message}' for message in warnings]))
         self.parent_widget.after(5000, self.detect_warnings)
 
