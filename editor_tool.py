@@ -11,7 +11,7 @@ from app.recipes_tab import RecipesTab
 class MainApplication:
     def __init__(self, parent_widget: tk.Tk):
         self.parent_widget: tk.Tk = parent_widget
-        self.parent_widget.title("Manager")
+        self.parent_widget.title("Editor Tool")
 
         self.data_model = DataModel()
 
