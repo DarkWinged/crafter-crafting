@@ -5,10 +5,10 @@ class ValueBox:
     def __init__(self, parent_frame: tk.Frame, label_text: str, update_data: callable, row: int=0, column: int=0, type: str='str'):
         self.label = tk.Label(parent_frame, text=f"{label_text}:")
         self.label.grid(row=row, column=column)
-        self.var = tk.StringVar()  # Create StringVar for ID
+        self.var = tk.StringVar()
         self.entry = tk.Entry(parent_frame, textvariable=self.var)
         self.entry.grid(row=row, column=column + 1)
-        self.var.trace("w", update_data)  # Attach trace to update data_list
+        self.var.trace("w", update_data)
         self.type = type
 
     def get(self):
@@ -38,7 +38,7 @@ class ValueBox:
             return None
         
     def set(self, value: any):
-        self.var.set(value)
+        self.var.set(f'{value}')
 
     def destroy(self):
         self.label.destroy()

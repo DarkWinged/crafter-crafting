@@ -1,10 +1,10 @@
-import copy 
 import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
 from app.entry_row import EntryRow
 from app.protected_list import PList
 from app.tab import Tab
+from app.value_box import ValueBox
 
 
 class RecipesTab(Tab):
@@ -25,15 +25,10 @@ class RecipesTab(Tab):
 
     def init_right_frame(self):
         super().init_right_frame()
-        self.id_var.trace("w", self.update_data_list)  # Attach trace to update data_list
-        self.name_var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.id_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.name_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
 
-        self.duration_var = tk.StringVar()
-        self.duration_var.trace("w", self.update_data_list)  # Attach trace to update data_list
-        self.duration_label = tk.Label(self.attributes_frame, text="Duration:")
-        self.duration_label.grid(row=2, column=0)
-        self.duration_entry = tk.Entry(self.attributes_frame, textvariable=self.duration_var)
-        self.duration_entry.grid(row=2, column=1)
+        self.duration_value_box = ValueBox(self.attributes_frame, "Duration", self.update_data_list, 2, 0, 'int')
 
         self.ingredients_label = tk.Label(self.attributes_frame, text="Ingredients:")
         self.ingredients_label.grid(row=3, column=0, columnspan=2, pady=(10, 0))
@@ -83,9 +78,9 @@ class RecipesTab(Tab):
 
             self.selected_index = selected_index[0]
             selected_entry = self.data_list[self.selected_index]
-            self.id_var.set(selected_entry['id'])  # Update ID entry
-            self.name_var.set(selected_entry['name'])  # Update Name entry
-            self.duration_var.set(selected_entry['duration'])  # Update Duration entry
+            self.id_value_box.set(selected_entry['id'])  # Update ID entry
+            self.name_value_box.set(selected_entry['name'])  # Update Name entry
+            self.duration_value_box.set(selected_entry['duration'])  # Update Duration entry
 
             # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
             for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
@@ -100,7 +95,7 @@ class RecipesTab(Tab):
                 self.create_product_entry(product_id, product_amount, row)
 
     def clear_attributes(self):
-        self.duration_var.set("")
+        self.duration_value_box.set("")
         return super().clear_attributes()
 
     def clear_ingredient_entries(self):
@@ -194,16 +189,10 @@ class RecipesTab(Tab):
 
     def update_data_list(self, *args):
         if self.selected_index is not None:
-            new_id = self.id_var.get()
-            new_name = self.name_var.get()
-            new_duration = self.duration_var.get()
-            if new_id.isdigit():
-                new_id = int(new_id)
-            else:
-                new_id = None
-            if new_duration.isdigit():
-                new_duration = int(new_duration)
-            else:
+            new_id = self.id_value_box.get()
+            new_name = self.name_value_box.get()
+            new_duration = self.duration_value_box.get()
+            if new_duration is None:
                 new_duration = 0
             if new_id is not None and new_name is not None:
                 # Update the selected entry's data in data_list
@@ -247,4 +236,3 @@ class RecipesTab(Tab):
             if item.get('name') == name:
                 return item.get('id')
         return None
-
