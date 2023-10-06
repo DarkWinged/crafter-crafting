@@ -11,7 +11,7 @@ from app.recipes_tab import RecipesTab
 class MainApplication:
     def __init__(self, parent_widget: tk.Tk):
         self.parent_widget: tk.Tk = parent_widget
-        self.parent_widget.title("Manager")
+        self.parent_widget.title("Editor Tool")
 
         self.data_model = DataModel()
 
@@ -34,7 +34,10 @@ class MainApplication:
         self.tabs.add(self.recipes_frame, text="Recipes")
 
         self.ingredients_tab = IngredientsTab(self.ingredients_frame, self.data_model.ingredients)
+        self.tabs.bind("<<NotebookTabChanged>>", self.ingredients_tab.show_selected_entry_details)
+
         self.recipes_tab = RecipesTab(self.recipes_frame, self.data_model.recipes, self.ingredients_tab.data_list)
+        self.tabs.bind("<<NotebookTabChanged>>", self.recipes_tab.show_selected_entry_details)
 
         self.file_path = None
 

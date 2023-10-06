@@ -34,8 +34,6 @@ class RecipesTab(Tab):
         self.ingredients_label.grid(row=3, column=0, columnspan=2, pady=(10, 0))
         self.ingredients_pane = ttk.PanedWindow(self.attributes_frame, orient=tk.VERTICAL)
         self.ingredients_pane.grid(row=4, column=0, columnspan=2, sticky="nsew", padx=10)
-        self.ingredients_listbox = tk.Listbox(self.ingredients_pane, selectmode=tk.SINGLE)
-        self.ingredients_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.add_ingredient_button = tk.Button(self.attributes_frame, text="Add Ingredient", command=self.add_ingredient_entry)
         self.add_ingredient_button.grid(row=5, column=0, columnspan=2, pady=(0, 10))
 
@@ -43,8 +41,6 @@ class RecipesTab(Tab):
         self.products_label.grid(row=6, column=0, columnspan=2, pady=(10, 0))
         self.products_pane = ttk.PanedWindow(self.attributes_frame, orient=tk.VERTICAL)
         self.products_pane.grid(row=7, column=0, columnspan=2, sticky="nsew", padx=10)
-        self.products_listbox = tk.Listbox(self.products_pane, selectmode=tk.SINGLE)
-        self.products_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.add_product_button = tk.Button(self.attributes_frame, text="Add Product", command=self.add_product_entry)
         self.add_product_button.grid(row=8, column=0, columnspan=2, pady=(0, 10))
 
@@ -72,41 +68,41 @@ class RecipesTab(Tab):
         self.data_list.reset()  # Reset the data_list to the original state
         selected_index = self.listbox.curselection()
         if selected_index:
-            # Clear the ingredient and product listboxes and their widgets
-            self.clear_ingredient_entries()
-            self.clear_product_entries()
-
             self.selected_index = selected_index[0]
-            selected_entry = self.data_list[self.selected_index]
-            self.id_value_box.set(selected_entry['id'])  # Update ID entry
-            self.name_value_box.set(selected_entry['name'])  # Update Name entry
-            self.duration_value_box.set(selected_entry['duration'])  # Update Duration entry
+        elif not self.selected_index:
+            return
+        # Clear the ingredient and product listboxes and their widgets
+        self.clear_ingredient_entries()
+        self.clear_product_entries()
 
-            # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
-            for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
-                ingredient_id = ingredient.get('id')
-                ingredient_amount = ingredient.get('amount')
-                self.create_ingredient_entry(ingredient_id, ingredient_amount, row)
+        selected_entry = self.data_list[self.selected_index]
+        self.id_value_box.set(selected_entry['id'])  # Update ID entry
+        self.name_value_box.set(selected_entry['name'])  # Update Name entry
+        self.duration_value_box.set(selected_entry['duration'])  # Update Duration entry
 
-            # Fill the product listbox with dropdown and amount textbox for each product
-            for row, product in enumerate(selected_entry.get('products', [])):
-                product_id = product.get('id')
-                product_amount = product.get('amount')
-                self.create_product_entry(product_id, product_amount, row)
+        # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
+        for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
+            ingredient_id = ingredient.get('id')
+            ingredient_amount = ingredient.get('amount')
+            self.create_ingredient_entry(ingredient_id, ingredient_amount, row)
+
+        # Fill the product listbox with dropdown and amount textbox for each product
+        for row, product in enumerate(selected_entry.get('products', [])):
+            product_id = product.get('id')
+            product_amount = product.get('amount')
+            self.create_product_entry(product_id, product_amount, row)
 
     def clear_attributes(self):
         self.duration_value_box.set("")
         return super().clear_attributes()
 
     def clear_ingredient_entries(self):
-        self.ingredients_listbox.delete(0, tk.END)
         # Clear ingredient widgets and their references
         for ingredient_row in self.ingredient_rows:
             ingredient_row.destroy()
         self.ingredient_rows = []
 
     def clear_product_entries(self):
-        self.products_listbox.delete(0, tk.END)
         # Clear product widgets and their references
         for product_row in self.product_rows:
             product_row.destroy()
@@ -117,14 +113,14 @@ class RecipesTab(Tab):
         if ingredient_names:
             selected_ingredient = ingredient_names[0]
             ingredient_options = [name for name in self.get_ingredient_names() if name != selected_ingredient]  # Remove selected product from options
-            ingredient_row = EntryRow(self.ingredients_listbox, selected_ingredient, ingredient_options, selected_amount, self.remove_ingredient_entry, row)
+            ingredient_row = EntryRow(self.ingredients_pane, selected_ingredient, ingredient_options, selected_amount, self.remove_ingredient_entry, row)
             ingredient_row.dropdown_var.trace("w", self.update_data_list)  # Attach trace to update data_list
             ingredient_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.ingredient_rows.append(ingredient_row)
         else:
             selected_ingredient = None
             ingredient_options = self.get_ingredient_names()
-            ingredient_row = EntryRow(self.ingredients_listbox, selected_ingredient, ingredient_options, selected_amount, self.remove_ingredient_entry, row)
+            ingredient_row = EntryRow(self.ingredients_pane, selected_ingredient, ingredient_options, selected_amount, self.remove_ingredient_entry, row)
             ingredient_row.dropdown_var.trace("w", self.update_data_list)  # Attach trace to update data_list
             ingredient_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.ingredient_rows.append(ingredient_row)
@@ -134,14 +130,14 @@ class RecipesTab(Tab):
         if product_names:
             selected_product = product_names[0]
             product_options = [name for name in self.get_ingredient_names() if name != selected_product]  # Remove selected product from options
-            product_row = EntryRow(self.products_listbox, selected_product, product_options, selected_amount, self.remove_product_entry, row)
+            product_row = EntryRow(self.products_pane, selected_product, product_options, selected_amount, self.remove_product_entry, row)
             product_row.dropdown_var.trace("w", self.update_data_list)  # Attach trace to update data_list
             product_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.product_rows.append(product_row)
         else:
             selected_product = None
             product_options = self.get_ingredient_names()
-            product_row = EntryRow(self.products_listbox, selected_product, product_options, selected_amount, self.remove_product_entry, row)
+            product_row = EntryRow(self.products_pane, selected_product, product_options, selected_amount, self.remove_product_entry, row)
             product_row.dropdown_var.trace("w", self.update_data_list)
             product_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.product_rows.append(product_row)
