@@ -68,27 +68,29 @@ class RecipesTab(Tab):
         self.data_list.reset()  # Reset the data_list to the original state
         selected_index = self.listbox.curselection()
         if selected_index:
-            # Clear the ingredient and product listboxes and their widgets
-            self.clear_ingredient_entries()
-            self.clear_product_entries()
-
             self.selected_index = selected_index[0]
-            selected_entry = self.data_list[self.selected_index]
-            self.id_value_box.set(selected_entry['id'])  # Update ID entry
-            self.name_value_box.set(selected_entry['name'])  # Update Name entry
-            self.duration_value_box.set(selected_entry['duration'])  # Update Duration entry
+        elif not self.selected_index:
+            return
+        # Clear the ingredient and product listboxes and their widgets
+        self.clear_ingredient_entries()
+        self.clear_product_entries()
 
-            # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
-            for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
-                ingredient_id = ingredient.get('id')
-                ingredient_amount = ingredient.get('amount')
-                self.create_ingredient_entry(ingredient_id, ingredient_amount, row)
+        selected_entry = self.data_list[self.selected_index]
+        self.id_value_box.set(selected_entry['id'])  # Update ID entry
+        self.name_value_box.set(selected_entry['name'])  # Update Name entry
+        self.duration_value_box.set(selected_entry['duration'])  # Update Duration entry
 
-            # Fill the product listbox with dropdown and amount textbox for each product
-            for row, product in enumerate(selected_entry.get('products', [])):
-                product_id = product.get('id')
-                product_amount = product.get('amount')
-                self.create_product_entry(product_id, product_amount, row)
+        # Fill the ingredient listbox with dropdown and amount textbox for each ingredient
+        for row, ingredient in enumerate(selected_entry.get('ingredients', [])):
+            ingredient_id = ingredient.get('id')
+            ingredient_amount = ingredient.get('amount')
+            self.create_ingredient_entry(ingredient_id, ingredient_amount, row)
+
+        # Fill the product listbox with dropdown and amount textbox for each product
+        for row, product in enumerate(selected_entry.get('products', [])):
+            product_id = product.get('id')
+            product_amount = product.get('amount')
+            self.create_product_entry(product_id, product_amount, row)
 
     def clear_attributes(self):
         self.duration_value_box.set("")

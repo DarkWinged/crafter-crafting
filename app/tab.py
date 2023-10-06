@@ -68,9 +68,12 @@ class Tab:
         selected_index = self.listbox.curselection()
         if selected_index:
             self.selected_index = selected_index[0]
-            selected_entry = self.data_list[self.selected_index]
-            self.id_value_box.set(selected_entry['id'])  # Update ID entry
-            self.name_value_box.set(selected_entry['name'])  # Update Name entry
+        elif not self.selected_index:
+            return
+
+        selected_entry = self.data_list[self.selected_index]
+        self.id_value_box.set(selected_entry['id'])  # Update ID entry
+        self.name_value_box.set(selected_entry['name'])  # Update Name entry
 
     def clear_attributes(self):
         self.selected_index = None  # Set selected_index to None
