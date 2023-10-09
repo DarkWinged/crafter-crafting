@@ -8,13 +8,21 @@ from app.value_box import ValueBox
 
 
 class RecipesTab(Tab):
-    def __init__(self, parent_frame, data_list, ingredients_data):
+    """RecipesTab class for handling the Recipes tab in the editor tool's main window.
+    """
+    def __init__(self, parent_frame: tk.Frame, data_list: list[dict[str, str or int]], ingredients_data: PList[list[str, str or int]]):
+        """Initialize the RecipesTab class.
+
+        Args:
+            parent_frame (tk.Frame): Parent frame for the tab
+            data_list (list[dict[str, str or int]]): List of recipe dictionaries to load into the tab
+            ingredients_data (PList[list[str, str or int]]): Protected list of ingredient dictionaries to use for the ingredient dropdowns
+        """
         self.parent_frame = parent_frame
         self.tab_name = "Recipes"
-        self.data_list = PList(data_list)
+        self.data_list: PList[list[str, str or int]] = PList(data_list)
         self.ingredients_data = ingredients_data
         self.selected_index = None
-
         # Create lists to hold the widgets for ingredients and products
         self.ingredient_rows: list[EntryRow] = []
         self.product_rows: list[EntryRow] = []
@@ -24,9 +32,11 @@ class RecipesTab(Tab):
         self.listbox.bind("<<ListboxSelect>>", self.show_selected_entry_details)
 
     def init_right_frame(self):
+        """Initialize the right frame with the recipe attributes
+        """
         super().init_right_frame()
-        self.id_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
-        self.name_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.id_value_box.var.trace("w", self.update_data_list)
+        self.name_value_box.var.trace("w", self.update_data_list)
 
         self.duration_value_box = ValueBox(self.attributes_frame, "Duration", self.update_data_list, 2, 0, 'int')
 
@@ -49,6 +59,12 @@ class RecipesTab(Tab):
         self.confirm_button.grid(row=9, column=0, columnspan=2, pady=10)
 
     def load_data(self, data: list[dict[str, str or int]], ingredients_data: list[dict[str, str or int]]):
+        """Load the data into the tab.
+
+        Args:
+            data (list[dict[str, str or int]]): List of recipe dictionaries to load into the tab
+            ingredients_data (list[dict[str, str or int]]): List of ingredient dictionaries to use for the ingredient dropdowns
+        """
         super().load_data(data)
         for entry in self.data_list:
             if entry.get('duration') is None:
