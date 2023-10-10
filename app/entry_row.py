@@ -2,7 +2,17 @@ import tkinter as tk
 
 
 class EntryRow:
-    def __init__(self, parent_frame: tk.Widget, selected, options, amount, remove_function: callable, row: int):
+    def __init__(self, parent_frame: tk.Widget, selected: str, options: list[str], amount: int, remove_function: callable, row: int):
+        """ EntryRow is a class that represents a row in the recipe editor tool's ingredients tab.
+
+        Args:
+            parent_frame (tk.Widget): Parent widget for the row
+            selected (str): Name of the selected option
+            options (list[str]): List of options for the dropdown
+            amount (int): Amount of item represented by the row
+            remove_function (callable): Function to call when the remove button is pressed
+            row (int): Row number of the row
+        """
         self.parent_frame = parent_frame
         self.dropdown_var = tk.StringVar(self.parent_frame)
         self.dropdown_var.set(selected)
@@ -19,9 +29,13 @@ class EntryRow:
         self.row = row
 
     def remove_button_callback(self):
+        """ Callback function for the remove button.
+        """
         self.remove_function(self.row)
 
     def destroy(self):
+        """ Destroys the row.
+        """
         self.dropdown.destroy()
         self.amount_label.destroy()
         self.amount_entry.destroy()
