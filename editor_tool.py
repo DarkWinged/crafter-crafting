@@ -10,6 +10,11 @@ from app.recipes_tab import RecipesTab
 
 class MainApplication:
     def __init__(self, parent_widget: tk.Tk):
+        """ MainApplication is a class that represents the main application.
+
+        Args:
+            parent_widget (tk.Tk): Parent widget for the application
+        """
         self.parent_widget: tk.Tk = parent_widget
         self.parent_widget.title("Editor Tool")
 
@@ -66,6 +71,8 @@ class MainApplication:
         self.parent_widget.bind(f"<{ctl}-Shift-S>", self.save_data_as)
 
     def load_data(self, event=None):
+        """ Loads data from a file.
+        """
         file_path = filedialog.askopenfilename(title="Select a file",
                                                filetypes=(("YAML files", "*.yaml"), ("JSON files", "*.json"),
                                                           ("All files", "*.*")))
@@ -79,6 +86,8 @@ class MainApplication:
                 self.display_error("File not found")
 
     def save_data(self, event=None):
+        """ Saves the data to a file.
+        """
         print(self.file_path)
         if self.file_path:
             try:
@@ -92,6 +101,8 @@ class MainApplication:
             self.save_data_as()
 
     def save_data_as(self, event=None):
+        """ Saves the data to a file.
+        """
         file_name = path.basename(self.file_path) if self.file_path else "untitled"
         file_path = filedialog.asksaveasfilename(title="Save As",
                                                  initialfile=file_name,
@@ -108,6 +119,7 @@ class MainApplication:
                 self.display_error("File not found")
 
     def new(self, event=None):
+        """ Creates a new data model. """
         self.data_model = DataModel()
         self.ingredients_tab.load_data(self.data_model.ingredients)
         self.recipes_tab.load_data(self.data_model.recipes, self.ingredients_tab.data_list)
@@ -121,6 +133,11 @@ class MainApplication:
         self.parent_widget.after(5000, self.detect_warnings)
 
     def detect_overlapping_ids(self, source: list[dict[str, str or int]]) -> list[str]:
+        """ Detects overlapping IDs in a list of dictionaries.
+
+        Args:
+            source (list[dict[str, str or int]]): List of dictionaries to check
+        """
         warnings = []
         ids = [
             ingredient.get('id')
@@ -138,14 +155,25 @@ class MainApplication:
         return warnings
 
     def display_error(self, event: tk.Event):
+        """ Displays an error message.
+
+        Args:
+            event (tk.Event): Event object
+        """
         if event.state == 406:
             self.error_label.config(text="Invalid input")
         self.parent_widget.after(5000, self.clear_error)
     
     def clear_error(self):
+        """ Clears the error message. """
         self.error_label.config(text="")
 
-    def show_info(self, message):
+    def show_info(self, message: str):
+        """Shows an info message.
+
+        Args:
+            message (str): The message to show.
+        """
         self.info_label.config(text=message, fg="green")
 
 if __name__ == "__main__":

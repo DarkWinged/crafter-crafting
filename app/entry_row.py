@@ -2,6 +2,7 @@ import tkinter as tk
 
 
 class EntryRow:
+    """ EntryRow is a class that represents a row of items in the recipe editor tool's ingredients tab."""
     def __init__(self, parent_frame: tk.Widget, selected: str, options: list[str], amount: int, remove_function: callable, row: int):
         """ EntryRow is a class that represents a row in the recipe editor tool's ingredients tab.
 
