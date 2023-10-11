@@ -8,13 +8,21 @@ from app.value_box import ValueBox
 
 
 class RecipesTab(Tab):
-    def __init__(self, parent_frame, data_list, ingredients_data):
+    """RecipesTab class for handling the Recipes tab in the editor tool's main window.
+    """
+    def __init__(self, parent_frame: tk.Frame, data_list: list[dict[str, str or int]], ingredients_data: PList[list[str, str or int]]):
+        """Initialize the RecipesTab class.
+
+        Args:
+            parent_frame (tk.Frame): Parent frame for the tab
+            data_list (list[dict[str, str or int]]): List of recipe dictionaries to load into the tab
+            ingredients_data (PList[list[str, str or int]]): Protected list of ingredient dictionaries to use for the ingredient dropdowns
+        """
         self.parent_frame = parent_frame
         self.tab_name = "Recipes"
-        self.data_list = PList(data_list)
+        self.data_list: PList[list[str, str or int]] = PList(data_list)
         self.ingredients_data = ingredients_data
         self.selected_index = None
-
         # Create lists to hold the widgets for ingredients and products
         self.ingredient_rows: list[EntryRow] = []
         self.product_rows: list[EntryRow] = []
@@ -24,9 +32,11 @@ class RecipesTab(Tab):
         self.listbox.bind("<<ListboxSelect>>", self.show_selected_entry_details)
 
     def init_right_frame(self):
+        """Initialize the right frame with the recipe attributes
+        """
         super().init_right_frame()
-        self.id_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
-        self.name_value_box.var.trace("w", self.update_data_list)  # Attach trace to update data_list
+        self.id_value_box.var.trace("w", self.update_data_list)
+        self.name_value_box.var.trace("w", self.update_data_list)
 
         self.duration_value_box = ValueBox(self.attributes_frame, "Duration", self.update_data_list, 2, 0, 'int')
 
@@ -49,6 +59,12 @@ class RecipesTab(Tab):
         self.confirm_button.grid(row=9, column=0, columnspan=2, pady=10)
 
     def load_data(self, data: list[dict[str, str or int]], ingredients_data: list[dict[str, str or int]]):
+        """Load the data into the tab.
+
+        Args:
+            data (list[dict[str, str or int]]): List of recipe dictionaries to load into the tab
+            ingredients_data (list[dict[str, str or int]]): List of ingredient dictionaries to use for the ingredient dropdowns
+        """
         super().load_data(data)
         for entry in self.data_list:
             if entry.get('duration') is None:
@@ -56,6 +72,8 @@ class RecipesTab(Tab):
         self.ingredients_data = ingredients_data
 
     def add_entry(self):
+        """ Add a new entry to the tab.
+        """
         name = simpledialog.askstring(f"Add {self.tab_name} Entry", f"Enter the {self.tab_name.lower()} name:")
         if name:
             new_id = len(self.data_list) + 1
@@ -65,6 +83,8 @@ class RecipesTab(Tab):
             self.clear_attributes()
 
     def show_selected_entry_details(self, event=None):
+        """Show the details of the selected entry.
+        """
         self.data_list.reset()  # Reset the data_list to the original state
         selected_index = self.listbox.curselection()
         if selected_index:
@@ -93,22 +113,33 @@ class RecipesTab(Tab):
             self.create_product_entry(product_id, product_amount, row)
 
     def clear_attributes(self):
+        """Clear the attributes of the selected entry.
+        """
         self.duration_value_box.set("")
         return super().clear_attributes()
 
     def clear_ingredient_entries(self):
-        # Clear ingredient widgets and their references
+        """Clear the ingredient widgets and their references.
+        """
         for ingredient_row in self.ingredient_rows:
             ingredient_row.destroy()
         self.ingredient_rows = []
 
     def clear_product_entries(self):
-        # Clear product widgets and their references
+        """Clear the product widgets and their references.
+        """
         for product_row in self.product_rows:
             product_row.destroy()
         self.product_rows = []
 
-    def create_ingredient_entry(self, selected_ingredient_id, selected_amount, row):
+    def create_ingredient_entry(self, selected_ingredient_id: int, selected_amount: int, row: int):
+        """Create an ingredient entry with the given values.
+
+        Args:
+            selected_ingredient_id (int): ID of the selected ingredient
+            selected_amount (int): Amount of the selected ingredient
+            row (int): Row of the ingredient entry
+        """
         ingredient_names = [item.get('name') for item in self.ingredients_data if item.get('id') == selected_ingredient_id]
         if ingredient_names:
             selected_ingredient = ingredient_names[0]
@@ -125,7 +156,14 @@ class RecipesTab(Tab):
             ingredient_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.ingredient_rows.append(ingredient_row)
 
-    def create_product_entry(self, selected_product_id, selected_amount, row):
+    def create_product_entry(self, selected_product_id: int, selected_amount: int, row: int):
+        """Create a product entry with the given values.
+
+        Args:
+            selected_product_id (int): ID of the selected product
+            selected_amount (int): Amount of the selected product
+            row (int): Row of the product entry
+        """
         product_names = [item.get('name') for item in self.ingredients_data if item.get('id') == selected_product_id]
         if product_names:
             selected_product = product_names[0]
@@ -142,29 +180,44 @@ class RecipesTab(Tab):
             product_row.amount_entry.bind("<KeyRelease>", self.update_data_list)
             self.product_rows.append(product_row)
 
-    def remove_ingredient_entry(self, row):
-        # Remove the ingredient widgets and references
+    def remove_ingredient_entry(self, row: int):
+        """ Remove the ingredient widgets and references.
+
+        Args:
+            row (int): Row of the ingredient entry
+        """
         self.ingredient_rows[row].destroy()
         for ingredient_row in range(row, len(self.ingredient_rows)):
             self.ingredient_rows[ingredient_row].row -= 1
         del self.data_list[self.selected_index]['ingredients'][row]
         del self.ingredient_rows[row]
-        # Update the ingredients listbox to reflect the changes
 
-    def remove_product_entry(self, row):
-        # Remove the product widgets and references
+    def remove_product_entry(self, row: int):
+        """ Remove the product widgets and references.
+
+        Args:
+            row (int): Row of the product entry
+        """
         self.product_rows[row].destroy()
         for product_row in range(row, len(self.product_rows)):
             self.product_rows[product_row].row -= 1
         del self.data_list[self.selected_index]['products'][row]
         del self.product_rows[row]
-        # Update the products listbox to reflect the changes
 
-    def get_ingredient_names(self):
+    def get_ingredient_names(self) -> list[str]:
+        """Get the names of the ingredients.
+
+        Returns:
+            list[str]: List of ingredient names
+        """
         return [item.get('name') for item in self.ingredients_data]
     
-    def get_selected_ingredient_ids(self):
-        # Get the IDs of the selected ingredients based on the dropdown selections
+    def get_selected_ingredient_ids(self) -> list[int]:
+        """Get the IDs of the selected ingredients based on the dropdown selections.
+
+        Returns:
+            list[int]: List of selected ingredient IDs
+        """
         selected_ingredient_ids = []
         for ingredient_row in self.ingredient_rows:
             ingredient_name = ingredient_row.dropdown_var.get()
@@ -173,8 +226,12 @@ class RecipesTab(Tab):
                 selected_ingredient_ids.append(ingredient_id)
         return selected_ingredient_ids
 
-    def get_selected_product_ids(self):
-        # Get the IDs of the selected products based on the dropdown selections
+    def get_selected_product_ids(self) -> list[int]:
+        """Get the IDs of the selected products based on the dropdown selections.
+
+        Returns:
+            list[int]: List of selected product IDs
+        """
         selected_product_ids = []
         for product_row in self.product_rows:
             product_name = product_row.dropdown_var.get()
@@ -184,6 +241,8 @@ class RecipesTab(Tab):
         return selected_product_ids
 
     def update_data_list(self, *args):
+        """Update the data list with the new values.
+        """
         if self.selected_index is not None:
             new_id = self.id_value_box.get()
             new_name = self.name_value_box.get()
@@ -214,20 +273,30 @@ class RecipesTab(Tab):
                 self.parent_frame.event_generate("<<Error>>", state=406)
 
     def add_ingredient_entry(self):
-        # Create an ingredient entry with default values
+        """Add an ingredient entry with default values.
+        """
         ingredient_id = 1
         ingredient_amount = 0
         self.data_list[self.selected_index]['ingredients'].append({'id': ingredient_id, 'amount': ingredient_amount})
         self.create_ingredient_entry(ingredient_id, ingredient_amount, len(self.data_list[self.selected_index]['ingredients'])-1)
 
     def add_product_entry(self):
-        # Create a product entry with default values
+        """Add a product entry with default values.
+        """
         product_id = 1
         product_amount = 0
         self.data_list[self.selected_index]['products'].append({'id': product_id, 'amount': product_amount})
         self.create_product_entry(product_id, product_amount, len(self.data_list[self.selected_index]['products'])-1)
 
-    def get_id_from_name(self, name):
+    def get_id_from_name(self, name: str) -> int:
+        """Get the ID of the given name.
+        
+        Args:
+            name (str): Name of the ingredient or product
+
+        Returns:
+            int: ID of the ingredient or product
+        """
         for item in self.ingredients_data:
             if item.get('name') == name:
                 return item.get('id')

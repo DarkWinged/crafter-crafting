@@ -1,7 +1,11 @@
 import copy
+from typing import Generic, TypeVar
 
-class PList:
+class PList(Generic[TypeVar('T')]):
     """A protected list class that allows for the original list to be updated to match the current list.
+
+    Args:
+        Generic (TypeVar('T')): See https://docs.python.org/3/library/typing.html#typing.Generic
     """
     def __init__(self, initial_list: list=None):
         """A protected list class that allows for the original list to be updated to match the current list.
